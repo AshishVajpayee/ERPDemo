@@ -1,0 +1,117 @@
+.settingWrapper {
+    width: 100%;
+    height: 100%;
+    background: rgba(38, 40, 68, 0.4);
+    position: absolute;
+    top: 0;
+    z-index: 5000;
+    display: none;
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+}
+.settingBox {
+    width: 600px;
+    height: 300px;
+    background: #ffffff;
+    box-shadow: 0 0  147px #5a5a5a;
+    animation-name: settingPopupAnimation;
+    animation-duration: 2s;
+    -moz-animation-duration: 1s;
+}
+.settingBox h1 {
+    background: #80808024;
+    text-align: center;
+    border-bottom: 1px solid #80808024;
+    margin: 0;
+    padding: 10px 0;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .setting_fields {
+    padding: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .setting_fields label {
+    width: 200px;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .setting_fields select {
+    width: 150px;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom {
+    border-top: 1px solid #80808024;
+    background: #80808024;
+    height: 60px;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom button {
+    width: 100px;
+    height: 30px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    float: right;
+    margin: 10px;
+    cursor: pointer;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom #apply {
+    background: green;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom #cancel {
+    background: red;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+@keyframes settingPopupAnimation {
+    0% {
+        width: 0;
+        height: 0;
+    }
+    100%{
+        width: 600px;
+        height: 300px;
+    }
+}
+@keyframes settingChildAnimation {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+input[type="color"] {
+    width: 150px;
+    border: none;
+}
+
+
+
+

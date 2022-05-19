@@ -1,0 +1,666 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+:root {
+    --main-bg-color: #272822;
+    --main-text-color: #ffffff;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+#editor {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 70%;
+    
+}
+#io {
+    width: 30%;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: var(--main-bg-color);
+    height: calc(100vh - 52px);
+    border-left: 2px solid #000000;
+    border-top: 2px solid #000000;
+}
+#io .stdin {
+    height: 50%;
+    width: 100%;
+    background: var(--main-bg-color);
+    border-bottom: 2px solid rgb(5, 252, 26);
+}
+#io #stdin {
+    width: calc(100% - 5px);
+    background: transparent;
+    height: 88%;
+    border: none;
+    outline: none;
+    color: var(--main-text-color);
+}
+#io #stdin:active {
+    outline: none;
+}
+
+#compile_output {
+    color: var(--main-text-color);
+    padding: 10px;
+    height: 250px;
+    overflow: auto;
+}
+#stats {
+    display: flex;
+    justify-content: space-evenly;
+    color: var(--main-text-color);
+    margin: 0;
+    padding: 0;
+}
+#stats p {
+    /*margin: 0;*/
+    /*padding: 0;*/
+    color: var(--main-text-color);
+}
+#selectedLanguage {
+    color: var(--main-text-color);
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+.io_heading {
+    margin: 0;
+    padding: 10px;
+    color: #03ffff;
+    text-align: center;
+    border-bottom: 2px solid rgb(5, 252, 26);;
+}
+header {
+    width: 100%;
+    height: 50px;
+    background-color: blue;
+    border-bottom: 2px solid #000000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header h2 {
+    padding: 0 0 0 10px;
+    margin: 0;
+    color: var(--main-text-color);
+    cursor: pointer;
+}
+header div {
+    display: flex;
+    align-items: center;
+}
+header button {
+    width: 80px;
+    height: 30px;
+    border-radius: 100px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    background-color: var(--main-text-color);
+    color: var(--main-bg-color);
+}
+button:active {
+    outline: none;
+}
+header i {
+    color: var(--main-text-color);
+    font-size: 20px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.settingWrapper {
+    width: 100%;
+    height: 100%;
+    background: rgba(38, 40, 68, 0.4);
+    position: absolute;
+    top: 0;
+    z-index: 5000;
+    display: none;
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+}
+.settingBox {
+    width: 600px;
+    height: 300px;
+    background: #ffffff;
+    box-shadow: 0 0  147px #5a5a5a;
+    animation-name: settingPopupAnimation;
+    animation-duration: 2s;
+    -moz-animation-duration: 1s;
+}
+.settingBox h1 {
+    background: #80808024;
+    text-align: center;
+    border-bottom: 1px solid #80808024;
+    margin: 0;
+    padding: 10px 0;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .setting_fields {
+    padding: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .setting_fields label {
+    width: 200px;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .setting_fields select {
+    width: 150px;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom {
+    border-top: 1px solid #80808024;
+    background: #80808024;
+    height: 60px;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom button {
+    width: 100px;
+    height: 30px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    float: right;
+    margin: 10px;
+    cursor: pointer;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom #apply {
+    background: green;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+.settingBox .bottom #cancel {
+    background: red;
+    animation-name: settingChildAnimation;
+    animation-duration: 3s;
+    -moz-animation-duration: 1s;
+}
+@keyframes settingPopupAnimation {
+    0% {
+        width: 0;
+        height: 0;
+    }
+    100%{
+        width: 600px;
+        height: 300px;
+    }
+}
+@keyframes settingChildAnimation {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+input[type="color"] {
+    width: 150px;
+    border: none;
+}
+</style>
+{% endblock custom_css %}
+
+
+{% block content %}
+<body>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                      <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                        <div>
+                            <b><a id="selectedLanguage" title="Language" onclick="showSettings()"></a></b>
+                            <button onclick="run()" id="run_btn" title="Run">Run</button>
+                            <i class="fas fa-file-download" title="Save file" style="font-size: 18px;" onclick="downloadCode()"></i>
+                            <label for="inputfile">
+                            <i class="fas fa-file-upload" title="Upload file" style="font-size: 18px;" onclick="uploadCode()">
+                                <input type="file" style="display: none;" id="inputfile"/>
+                            </i>
+                            </label>
+                            <i class="fas fa-cog" onclick="showSettings()" title="Settings"></i>
+                            <i class="fas fa-redo-alt" title="Clear Code" style="font-size: 18px;" onclick="clearCode()"></i>
+                        </div> 
+                    </div>
+                    
+ 
+
+<div class="card-body">
+    <div class="editor-container">
+        <div id="editor">
+            {{code}}
+        </div>
+
+<div id="io">
+    <div class="stdin">
+        <h3 class="io_heading">INPUT</h3>
+        <textarea name="stdin" id="stdin" cols="0" rows="20"></textarea>
+    </div>
+    </div>
+    <div class="output">
+        <h3 class="io_heading">OUTPUT</h3>
+        <div id="stats">
+            <p id="compile_time"></p>
+            <p id="compile_memory"></p>
+        </div>
+        <div id="compile_output"></div>
+    </div>
+    </div>
+    
+</div>
+
+
+    <form method="POST">
+        {% csrf_token %} {{form.as_p}}
+        <button type="submit">Save</button>
+    </form>
+</div>
+</div>
+</div>
+</div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <!--  ======================= SCRIPT FILES  ====================  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-beautify.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/defaultCode.js' %}"></script>
+<script src="{% static 'js/index.js' %}"></script>
+<script src="{% static 'js/showThemes.js' %}"></script>
+<script src="{% static 'js/showLanguages.js' %}"></script>
+    
+<script>
+
+var editor = ace.edit("editor");
+var beautify = ace.require("ace/ext/beautify");
+const defaultCode = new DefaultCode();
+var cssVariables = document.querySelector(':root');
+editor.setTheme("ace/theme/chrome");
+editor.session.setMode("ace/mode/c_cpp");
+const selectedLanguage = document.getElementById("selectedLanguage");
+document.getElementById('editor').style.fontSize = "18px";
+selectedLanguage.innerText = "C (GCC 9.1.0)";
+let selectedLangObj = {
+    label: "C (GCC 9.1.0)",
+    lang: "c",
+    version: "0",
+    mode: "c_cpp",
+    extension: 'c'
+};
+editor.session.setValue(defaultCode.code[selectedLangObj.lang]);
+document.getElementById('inputfile').accept = '.' + selectedLangObj.extension;
+
+function run() {
+    const run_btn = document.getElementById("run_btn");
+    run_btn.innerText = "Compiling";
+    var code = editor.getValue();
+    console.log(code);
+    if (!code) {
+        alert("Please Enter write code ...");
+        run_btn.innerText = "Run";
+        return;
+    }
+    let headers = new Headers();
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    headers.append('Origin', 'http://localhost:3000');
+    fetch("https://vv-ide.herokuapp.com/compile", {
+        method: "POST",
+        headers,
+        mode: 'cors',
+        body: JSON.stringify({
+            "script": code,
+            "language": selectedLangObj.lang,
+            "versionIndex": selectedLangObj.version,
+            "stdin": document.getElementById('stdin').value
+        })
+    }).then(res => {
+        console.log(res);
+        res.json().then((response) => {
+            console.log(response);
+            if (selectedLangObj.lang === 'php') {
+                document.getElementById("compile_output").innerHTML = response.response.output;
+            } else {
+                document.getElementById("compile_output").innerText = response.response.output;
+            }
+            document.getElementById("compile_time").innerText = "Time: " + response.response.cpuTime + " ms";
+            document.getElementById("compile_memory").innerText = "Memory: " + response.response.memory + " bytes";
+            run_btn.innerText = "Run";
+        }).catch(error => {
+            console.log(error);
+            alert("Could not compile code try later");
+            run_btn.innerText = "Run";
+        })
+    }).catch(error => {
+        console.log(error);
+        alert("Could not compile code try later");
+        run_btn.innerText = "Run";
+    });
+}
+
+function showSettings() {
+    $('#settings').css("display", "flex");
+     
+}
+
+$('#settings').click(function (ev) {
+    const settings = document.getElementById('settings');
+    if (ev.target === settings)
+        $('#settings').hide();
+});
+
+function saveSettings() {
+    // handling the active line select value
+    let activeLineSelectValue;
+    const el = document.getElementsByName('activeLineSelect');
+    for (let i = 0; i < el.length; i++) {
+        if (el[i].checked) {
+            activeLineSelectValue = el[i].value;
+        }
+    }
+    editor.setShowPrintMargin(activeLineSelectValue);
+    editor.setTheme("ace/theme/" + document.getElementById("themeSelect").value);
+    const lang = JSON.parse(document.getElementById("languageSelect").value);
+    if (selectedLangObj.lang !== lang.lang) {
+        const check = confirm('It seems you had changed language \nIt will effect your code');
+        if (check) {
+            editor.session.setMode("ace/mode/" + lang.mode);
+            editor.setValue(defaultCode.code[lang.lang]);
+            selectedLangObj = lang;
+            selectedLanguage.innerText = lang.label;
+        }
+    }
+    document.getElementById('inputfile').accept = '.' + selectedLangObj.extension;
+    document.getElementById('editor').style.fontSize = document.getElementById("fontSizeSelect").value + "px";
+    $('#settings').hide();
+}
+
+function cancelSettings() {
+    $('#settings').hide();
+}
+
+function downloadCode() {
+    const name = "NEW FILE_" + selectedLangObj.lang + " " + new Date().toLocaleString();
+    download(editor.getValue(), name + "." + selectedLangObj.extension, 'text/plain');
+}
+
+function download(strData, strFileName, strMimeType) {
+    var D = document,
+        A = arguments,
+        a = D.createElement("a"),
+        d = A[0],
+        n = A[1],
+        t = A[2] || "text/plain";
+
+    //build download link:
+    a.href = "data:" + strMimeType + "charset=utf-8," + escape(strData);
+
+
+    if (window.MSBlobBuilder) { // IE10
+        var bb = new MSBlobBuilder();
+        bb.append(strData);
+        return navigator.msSaveBlob(bb, strFileName);
+    } /* end if(window.MSBlobBuilder) */
+
+
+
+    if ('download' in a) { //FF20, CH19
+        a.setAttribute("download", n);
+        a.innerHTML = "downloading...";
+        D.body.appendChild(a);
+        setTimeout(function() {
+            var e = D.createEvent("MouseEvents");
+            e.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            a.dispatchEvent(e);
+            D.body.removeChild(a);
+        }, 66);
+        return true;
+    }; /* end if('download' in a) */
+
+
+
+    //do iframe dataURL download: (older W3)
+    var f = D.createElement("iframe");
+    D.body.appendChild(f);
+    f.src = "data:" + (A[2] ? A[2] : "application/octet-stream") + (window.btoa ? ";base64" : "") + "," + (window.btoa ? window.btoa : escape)(strData);
+    setTimeout(function() {
+        D.body.removeChild(f);
+    }, 333);
+    return true;
+}
+
+function clearCode() {
+    let confirm = window.confirm("Are you sure you want to reset code \nYou cannot get this code back");
+    if (confirm)
+        editor.session.setValue(defaultCode.code[selectedLangObj.lang]);
+}
+
+window.onbeforeunload = function (event) {
+    return confirm("Confirm refresh");
+};
+
+function uploadCode(){
+    document.getElementById('inputfile')
+        .addEventListener('change', function() {
+
+            var fr=new FileReader();
+            fr.onload=function(){
+                editor.setValue(fr.result);
+            }
+            fr.readAsText(this.files[0]);
+        })
+}
+function showInfo(){
+    window.open('Readme.md.html');
+}
+
+const languages = [
+     
+    {
+        label: "C (GCC 9.1.0)",
+        lang: "c",
+        version: "4",
+        mode: "c_cpp",
+        extension: 'c'
+    },
+    //done
+    
+    {
+        label: "C++ (GCC 9.1.0)",
+        lang: "cpp",
+        version: "4",
+        mode: "c_cpp",
+        extension: 'cpp'
+    },
+    // done
+    {
+        label: "C++ 14 (g++ 14 GCC 9.1.0)",
+        lang: "cpp14",
+        version: "4",
+        mode: "c_cpp",
+        extension: 'cpp'
+    },
+    // Done
+    {
+        label: "C++ 17 (g++ 14 GCC 9.10)",
+        lang: "cpp17",
+        version: "1",
+        mode: "c_cpp",
+        extension: 'cpp'
+    },
+     
+    // Done
+    {
+        label: "Java (JDK 1.8.0_66)",
+        lang: "java",
+        version: "0",
+        mode: 'java',
+        extension: 'java'
+    },
+    {
+        label: "Java (9.0.1)",
+        lang: "java",
+        version: "1",
+        mode: 'java',
+        extension: 'java'
+    },
+    {
+        label: "Java (10.0.1)",
+        lang: "java",
+        version: "2",
+        mode: 'java',
+        extension: 'java'
+    },
+    {
+        label: "Java (11.0.4)",
+        lang: "java",
+        version: "3",
+        mode: 'java',
+        extension: 'java'
+    },
+     
+    // Done
+     
+    {
+        label: "Python 2 (2.7.16)",
+        lang: "python2",
+        version: "2",
+        mode: "python",
+        extension: 'py'
+    },
+    // Done
+     
+    {
+        label: "Python 3 (3.7.4)",
+        lang: "python3",
+        version: "3",
+        mode: "python",
+        extension: 'py'
+    },
+    // Done
+    {
+        label: "SQL (SQLite 3.9.2)",
+        lang: "sql",
+        version: "0",
+        mode: "sql",
+        extension: 'sql'
+    },
+    {
+        label: "SQL (SQLite 3.29.0)",
+        lang: "sql",
+        version: "3",
+        mode: "sql",
+        extension: 'sql'
+    },
+    // Done
+     
+]
+
+const languageSelect = document.getElementById("languageSelect");
+for (let i = 0 ; i < languages.length; i++){
+    languageSelect.options[languageSelect.options.length] = new Option(languages[i].label, JSON.stringify(languages[i]));
+}
+
+const themes = [
+    "chrome",
+    "cobalt",
+    "merbivore",
+   
+];
+const themeSelect = document.getElementById("themeSelect");
+for (let i = 0 ; i < themes.length; i++){
+    themeSelect.options[themeSelect.options.length] = new Option(themes[i], themes[i]);
+}
+
+class DefaultCode {
+    code = {
+        "c": "#include<stdio.h>\n\nvoid main(){\n    printf(\"Hello world\");\n    printf(\"Welcome to IDE\");\n}",
+        "cpp": "#include<iostream>\n" +
+            "\n" +
+            "using namespace std;\n" +
+            "\n" +
+            "int main(){\n" +
+            "    cout << \"Hello world\";\n" +
+            "    return 0;\n" +
+            "}",
+        "cpp14": "#include<iostream>\n" +
+            "\n" +
+            "using namespace std;\n" +
+            "\n" +
+            "int main(){\n" +
+            "    cout << \"Hello world\";\n" +
+            "    return 0;\n" +
+            "}",
+        "cpp17": "#include<iostream>\n" +
+            "\n" +
+            "using namespace std;\n" +
+            "\n" +
+            "int main(){\n" +
+            "    cout << \"Hello world\";\n" +
+            "    return 0;\n" +
+            "}",
+        "java": "public class MainClass {\n" +
+            "    public static void main(String args[]) {\n" +
+            "        System.out.println(\"Hello world\");\n" +
+            "    }\n" +
+            "}",
+        "python2": "print(\"hello world\")",
+        "python3": "print(\"hello world\")",
+        
+        "sql": "create table Test(id integer, title varchar(100));\n" +
+            "insert into Test(id, title) values(1, \"HelloWorld\");\n" +
+            "select * from Test;\n",
+        
+    }
+}
+
+    </script>
+{% endblock custom_js %}
+
+</body>
+
+
+
