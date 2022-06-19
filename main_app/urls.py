@@ -133,4 +133,6 @@ urlpatterns = [
     path('student/view/ide/', student_views.student_view_ide, 
     name='student_view_ide'),
 
+    path('student/view/classes/', student_views.student_view_classes, name='student_view_classes'),
+
 ]

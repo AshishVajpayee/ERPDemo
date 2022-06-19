@@ -470,6 +470,17 @@
                         </p>
                     </a>
                 </li>
+
+                <li class="nav-item">
+        
+                    {% url 'student_view_ide' as student_view_ide %}
+                    <a href="{{student_view_classes}}" class="nav-link {% if student_view_classes == request.path %} active {% endif %}">
+                        <i class="nav-icon fa-solid fas fas fa-camera"></i>
+                        <p>
+                           Online Classes
+                        </p>
+                    </a>
+                </li>
           
 {% endif %}
 

@@ -209,6 +209,7 @@ def student_view_result(request):
     }
     return render(request, "student_template/student_view_result.html", context)
 
+
 def student_view_ide(request):
     context = {
         'page_title': "IDE"
@@ -230,3 +231,12 @@ def index(request):
         'code': code
     }
     return render(request, "{% static 'index.html' %}", context)
+
+
+def student_view_classes(request):
+    context = {
+        'page_title': "Online Classes"
+    }
+    return render(request, "student_template/student_view_classes.html", context)
+
+    

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 3 | Log in</title>
+    <title>Institutional ERP | Log in</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font Awesome -->
@@ -21,11 +21,18 @@
     <!-- Google Recaptcha     -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
+<style>
+    body {
+        background-image: url('dist/img/ERP.png');
+    }
+</style>
 
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="../../index2.html"><b>Admin</b>LTE</a>
+            <img src="{% static 'dist/img/ErpLog.png' %} " alt="InstitutionalERP Logo"
+            class="brand-image img-circle" height="100" width="250" style="opacity: .8">
+            <a href="../../index2.html"><b>Institutional ERP</b></a>
 
         </div>
         <!-- /.login-logo -->
@@ -105,3 +112,6 @@
 </body>
 
 </html>
+
+
+

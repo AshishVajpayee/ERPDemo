@@ -1,0 +1,93 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                    </div>
+
+
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <div class="card-body">
+
+
+
+                       
+
+
+                        <div class="form-group table">
+              <table class="table table-bordered">
+                  <tr>
+                      <th>SN</th>
+                      <th>Date</th>
+                      <th>Message</th>
+                  </tr>
+                  {% for notification in  notifications %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{notification.created_at}}</td>
+                        <td>{{notification.message}}</td>
+                    </tr>
+                  {% endfor %}
+              </table>
+                        </div>
+                   
+                    </div>
+                    <!-- /.card-body -->
+
+                <!-- /.card -->
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+{% block custom_js %}
+
+
+    <script src='https://meet.jit.si/external_api.js'></script>
+  <body>
+  
+  <button id="start" type="button">Start</button>
+  <div id="jitsi-container">
+  </div>
+  
+  <script>
+  var button = document.querySelector('#start');
+  var container = document.querySelector('#jitsi-container');
+  var api = null;
+  
+  button.addEventListener('click', () => {
+      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var stringLength = 30;
+  
+      function pickRandom() {
+      return possible[Math.floor(Math.random() * possible.length)];
+      }
+  
+  var randomString = Array.apply(null, Array(stringLength)).map(pickRandom).join('');
+  
+      var domain = "meet.jit.si";
+      var options = {
+          "roomName": randomString,
+          "parentNode": container,
+          "width": 600,
+          "height": 600,
+      };
+      api = new JitsiMeetExternalAPI(domain, options);
+  });
+  
+  </script>
+  </body>
+  
+  {% endblock custom_js %}
+
+  
