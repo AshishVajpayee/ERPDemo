@@ -15,7 +15,7 @@
                     </div>
 
                     <div class="table card-body">
-                        <table class="table table-bordered">
+                        <table id="student_feedbacktable" class="table table-bordered">
                             <tr>
                                 <th>SN</th>
                                 <th>Student</th>
@@ -128,5 +128,10 @@
                 })
           })
       })
+  </script>
+  <script>
+    $(document).ready( function () {
+        $('#student_feedbacktable').DataTable();
+    } );
   </script>
 {% endblock custom_js %}

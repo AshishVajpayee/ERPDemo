@@ -154,6 +154,7 @@ def student_view_profile(request):
                 address = form.cleaned_data.get('address')
                 gender = form.cleaned_data.get('gender')
                 passport = request.FILES.get('profile_pic') or None
+              
                 admin = student.admin
                 if password != None:
                     admin.set_password(password)
@@ -214,6 +215,8 @@ def student_view_ide(request):
         'page_title': "IDE"
     }
     return render(request, "student_template/ide/index.html", context)
+
+
 
 def index(request):
     form = MyForm()

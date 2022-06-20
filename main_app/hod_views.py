@@ -75,6 +75,7 @@ def add_staff(request):
     return render(request, 'hod_template/add_staff_template.html', context)
 
 
+
 def add_student(request):
     student_form = StudentForm(request.POST or None, request.FILES or None)
     context = {'form': student_form, 'page_title': 'Add Student'}
@@ -88,6 +89,7 @@ def add_student(request):
             password = student_form.cleaned_data.get('password')
             course = student_form.cleaned_data.get('course')
             session = student_form.cleaned_data.get('session')
+            fee = student_form.cleaned_data.get('fee')
             passport = request.FILES['profile_pic']
             fs = FileSystemStorage()
             filename = fs.save(passport.name, passport)
@@ -99,6 +101,7 @@ def add_student(request):
                 user.address = address
                 user.student.session = session
                 user.student.course = course
+                user.student.fee = fee
                 user.save()
                 messages.success(request, "Successfully Added")
                 return redirect(reverse('add_student'))
@@ -130,6 +133,35 @@ def add_course(request):
             messages.error(request, "Could Not Add")
     return render(request, 'hod_template/add_course_template.html', context)
 
+def add_payment(request):
+    
+    form = PaymentForm(request.POST or None)
+    context = {
+        'form': form,
+        'page_title': 'Payment'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            student = form.cleaned_data.get('student')
+            paymentMethod = form.cleaned_data.get('paymentMethod')
+            paid = form.cleaned_data.get('paid')
+            payable = form.cleaned_data.get('payable')
+            
+            try:
+                pay = payment()
+                pay.paymentMethod =paymentMethod
+                pay.paid = paid
+                pay.payable = payable
+                pay.balanceamount = payable -paid
+                pay.student = student
+                pay.save()
+                messages.success(request, "Successfully paid")
+            except Exception as e:
+                messages.error(request, "Could Not paid"+ str(e))
+        else:
+            messages.error(request, "Could Not paid")
+
+    return render(request, 'hod_template/Payment.html', context)
 
 def add_subject(request):
     form = SubjectForm(request.POST or None)
@@ -175,6 +207,23 @@ def manage_student(request):
         'page_title': 'Manage Students'
     }
     return render(request, "hod_template/manage_student.html", context)
+
+def manage_payment(request):
+    payments = payment.objects.all()
+    context = {
+        'payments': payments,
+        'page_title': 'Manage payments'
+    }
+    return render(request, "hod_template/manage_payment.html", context)
+
+def manage_fee(request):
+    fees = fee.objects.all()
+    context = {
+        'fee': fees,
+        'page_title': 'Manage fees'
+    }
+    return render(request, "hod_template/manage_fee.html", context)
+
 
 
 def manage_course(request):
@@ -292,6 +341,35 @@ def edit_student(request, student_id):
     else:
         return render(request, "hod_template/edit_student_template.html", context)
 
+def edit_payment(request, pay_id):
+    instance = get_object_or_404(Course, id=pay_id)
+    form = PaymentEditForm(request.POST or None, instance=instance)
+    context = {
+        'form': form,
+        'payment_id': pay_id,
+        'page_title': 'Pay Balance'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            paymentMethod = form.cleaned_data.get('paymentMethod')
+            paid = form.cleaned_data.get('paid')
+            
+            try:
+                pay = payment.objects.get(id=pay_id)
+                pay.paymentMethod =paymentMethod
+                pay.paid =pay.paid + paid
+                pay.payable = pay.balanceamount
+                pay.balanceamount = pay.payable - paid
+                pay.student = pay.student
+                pay.save()
+                
+                messages.success(request, "Successfully Updated")
+            except:
+                messages.error(request, "Could Not Update")
+        else:
+            messages.error(request, "Could Not Update")
+
+    return render(request, 'hod_template/edit_payment.html', context) 
 
 def edit_course(request, course_id):
     instance = get_object_or_404(Course, id=course_id)
@@ -315,6 +393,31 @@ def edit_course(request, course_id):
             messages.error(request, "Could Not Update")
 
     return render(request, 'hod_template/edit_course_template.html', context)
+
+def edit_fee(request, fee_id):
+    instance = get_object_or_404(fee, id=fee_id)
+    form = FeeForm(request.POST or None, instance=instance)
+    context = {
+        'form': form,
+        'fee_id': fee_id,
+        'page_title': 'Edit fee'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            addmissiontype = form.cleaned_data.get('addmissiontype')
+            amount = form.cleaned_data.get('amount')
+            try:
+                fee1 = fee.objects.get(id= fee_id)
+                fee1.addmissiontype = addmissiontype
+                fee1.amount = amount
+                fee1.save()
+                messages.success(request, "Successfully Updated")
+            except:
+                messages.error(request, "Could Not Update")
+        else:
+            messages.error(request, "Could Not Update")
+
+    return render(request, 'hod_template/edit_fee.html', context)
 
 
 def edit_subject(request, subject_id):
@@ -344,6 +447,28 @@ def edit_subject(request, subject_id):
             messages.error(request, "Fill Form Properly")
     return render(request, 'hod_template/edit_subject_template.html', context)
 
+def add_fee(request):
+    form = FeeForm(request.POST or None)
+    context = {
+        'form': form,
+        'page_title': 'Add Fee'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            addmissiontype = form.cleaned_data.get('addmissiontype')
+            amount = form.cleaned_data.get('amount')
+            try:
+                fee1 = fee()
+                fee1.addmissiontype = addmissiontype
+                fee1.amount = amount
+                fee1.save()
+                messages.success(request, "Successfully Added")
+                return redirect(reverse('add_fee'))
+            except Exception as e:
+                messages.error(request, 'Could Not Add'+ str(e))
+        else:
+            messages.error(request, "Could Not Add")
+    return render(request, 'hod_template/add_fee.html', context)
 
 def add_session(request):
     form = SessionForm(request.POST or None)
@@ -660,6 +785,16 @@ def delete_course(request, course_id):
         messages.error(
             request, "Sorry, some students are assigned to this course already. Kindly change the affected student course and try again")
     return redirect(reverse('manage_course'))
+
+def delete_fee(request, fee_id):
+    fee1 = get_object_or_404(fee, id=fee_id)
+    try:
+        fee1.delete()
+        messages.success(request, "fee deleted successfully!")
+    except Exception:
+        messages.error(
+            request, "Sorry, some students are assigned to this course already. Kindly change the affected student course and try again")
+    return redirect(reverse('manage_fee'))
 
 
 def delete_subject(request, subject_id):

@@ -14,7 +14,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table id="staff_notificationtable" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>SN</th>
@@ -123,5 +123,10 @@
 
     }
 
+  </script>
+  <script>
+    $(document).ready( function () {
+        $('#staff_notificationtable').DataTable();
+    } );
   </script>
 {% endblock custom_js %}

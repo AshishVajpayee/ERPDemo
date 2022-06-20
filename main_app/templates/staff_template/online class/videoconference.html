@@ -1,0 +1,51 @@
+<html>
+
+<head>
+  
+  
+  <title>online class</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src='https://meet.jit.si/external_api.js'></script>
+</head>
+
+
+
+<div  class =" bg-warning" style ="height :10%">
+  <br>
+<div style =" margin : 0 0 5% 10% ; ">
+<b style ="font-size : 20px;">Subject Name : </b> <input type="text" id="Coursename" value=" " style =" width : 50%">
+
+<button onclick="myFunction()" class="bg-primary ">Submit</button>
+</div>
+</div>
+<div id="jitsi-container"  >
+    
+  
+</div>
+
+<script>
+ function  myFunction(){
+var randomString = document.getElementById("Coursename").value;
+var container = document.querySelector('#jitsi-container');
+var api = null;
+
+    var domain = "meet.jit.si";
+    var options = {
+        "roomName": randomString,
+        "parentNode": container,
+        "width":"100%",
+        "height": 600,
+        interfaceConfigOverwrite: {
+          SHOW_BRAND_WATERMARK: false,
+          SHOW_JITSI_WATERMARK: false,
+          SHOW_WATERMARK_FOR_GUESTS: false,
+          SHOW_POWERED_BY: false
+          }
+    };
+    api = new JitsiMeetExternalAPI(domain, options);
+
+  }
+</script>
+
+
+</html>

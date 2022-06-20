@@ -14,22 +14,22 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="sessiontable" class="table table-bordered table-hover">
+                        <table id="feetable" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>SN</th>
-                                    <th>Start</th>
-                                    <th>End</th>
+                                    <th>Addmission Type</th>
+                                    <th>Amount</th>
                                     <th>Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for session in sessions %}
+                                {% for fee in fee %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{session.start_year}}</td>
-                                    <td>{{session.end_year}}</td>
-                                    <td><a href="{% url 'edit_session' session.id %}" class="btn btn-primary">Edit</a> - <a href="{% url 'delete_session' session.id %}" onclick="return confirm('Are you sure you want to delete this ?')" class="btn btn-danger">Delete</a> </td>
+                                    <td>{{fee.addmissiontype}}</td>
+                                    <td>{{fee.amount}}</td>
+                                    <td><a href="{% url 'edit_fee' fee.id %}" class="btn btn-primary">Edit</a> - <a href="{% url 'delete_fee' fee.id %}" onclick="return confirm('Are you sure you want to delete this ?')" class="btn btn-danger">Delete</a> </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -41,11 +41,10 @@
     </div>
 </section>
 {% endblock content %}
-
 {% block custom_js %}
 <script>
     $(document).ready( function () {
-        $('#sessiontable').DataTable();
+        $('#feetable').DataTable();
     } );
   </script>
     {% endblock custom_js %}

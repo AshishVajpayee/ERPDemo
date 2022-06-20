@@ -1,5 +1,6 @@
+
 from django import forms
-from django.forms.widgets import DateInput, TextInput
+from django.forms.widgets import DateInput, NumberInput
 
 from .models import *
 
@@ -54,15 +55,41 @@ class CustomUserForm(FormSettings):
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'gender',  'password','profile_pic', 'address' ]
 
+class FeeForm(FormSettings):
+    def __init__(self, *args, **kwargs):
+        super(FeeForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['addmissiontype','amount']
+        model = fee
+
+class PaymentForm(FormSettings):
+    def __init__(self, *args, **kwargs):
+        super(PaymentForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['student','paymentMethod','payable','paid']
+        model = payment
+        
+class PaymentEditForm(PaymentForm):
+    def __init__(self, *args, **kwargs):
+        super(PaymentEditForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['paymentMethod','paid']
+        model = payment
 
 class StudentForm(CustomUserForm):
+    
     def __init__(self, *args, **kwargs):
         super(StudentForm, self).__init__(*args, **kwargs)
 
     class Meta(CustomUserForm.Meta):
+        
         model = Student
         fields = CustomUserForm.Meta.fields + \
-            ['course', 'session']
+            ['course', 'session','fee']
+        
 
 
 class AdminForm(CustomUserForm):

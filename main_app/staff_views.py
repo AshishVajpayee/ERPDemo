@@ -252,6 +252,11 @@ def staff_view_notification(request):
     }
     return render(request, "staff_template/staff_view_notification.html", context)
 
+def staff_online_class(request):
+    context = {
+        'page_title': "online class"
+    }
+    return render(request, "staff_template/online class/videoconference.html", context)
 
 def staff_add_result(request):
     staff = get_object_or_404(Staff, admin=request.user)

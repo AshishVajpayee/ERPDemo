@@ -1,9 +1,12 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
+{% block custom_css %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+{% endblock custom_css %}
 
 {% block content %}
-
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -14,7 +17,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table id="myTable" class="table table-bordered table-hover table-wrapper ">
                             <thead>
                                 <tr>
                                     <th>SN</th>
@@ -23,7 +26,11 @@
                                     <th>Gender</th>
                                     <th>Course</th>
                                     <th>Avatar</th>
+                                    <th> fee</th>
+                                    
+                                    
                                     <th>Edit</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,6 +49,8 @@
                                             src="{{student.profile_pic}}" alt="">
                                         {% endif %}
                                     </td>
+                                    <td>{{student.student.fee.amount}}</td>
+                                    
                                     
                                     <td><a href="{% url 'edit_student' student.student.id %}" class="btn btn-primary">Edit</a> -
                                         <a href="{% url 'delete_student' student.student.id %}" class="btn btn-danger" onclick="return confirm('Are you sure about this ?')">Delete</a>
@@ -58,3 +67,12 @@
     </div>
 </section>
 {% endblock content %}
+
+{% block custom_js %}
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+  </script>
+    {% endblock custom_js %}
+

@@ -1,0 +1,50 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+
+{% block content %}
+
+<head>
+ 
+  <script src='https://meet.jit.si/external_api.js'></script>
+</head>
+
+
+
+
+
+Subject Name: <input type="text" id="Coursename" value=" " style =" width : 50%">
+
+<button onclick="myFunction()" class="bg-primary">Submit</button>
+
+<div id="jitsi-container"  >
+    
+</div>
+
+<script>
+ function  myFunction(){
+var randomString = document.getElementById("Coursename").value;
+var container = document.querySelector('#jitsi-container');
+var api = null;
+
+    var domain = "meet.jit.si";
+    var options = {
+        "roomName": randomString,
+        "parentNode": container,
+        "width":"100%",
+        "height": 600,
+        interfaceConfigOverwrite: {
+          SHOW_BRAND_WATERMARK: false,
+          SHOW_JITSI_WATERMARK: false,
+          SHOW_WATERMARK_FOR_GUESTS: false,
+          SHOW_POWERED_BY: false
+          }
+    };
+    api = new JitsiMeetExternalAPI(domain, options);
+
+  }
+</script>
+
+
+{% endblock content %}

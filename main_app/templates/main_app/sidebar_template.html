@@ -49,6 +49,57 @@
                         </p>
                     </a>
                 </li>
+
+
+                <li class="nav-header">Manage fee</li>
+                <li class="nav-item">
+                    {% url 'add_fee' as add_fee%}
+                    <a href="{{add_fee}}" class="nav-link  {% if add_fee == request.path %} active {% endif %}">
+                        <i class="nav-icon fa-solid fas fa-money-bill-alt"></i>
+                        <p>
+                            Add fee
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'manage_fee' as manage_fee %}
+                    {% url 'edit_fee' fee_id as edit_fee %}
+
+                    <a href="{{manage_fee}}"
+                        class="nav-link  {% if edit_fee == request.path or manage_fee == request.path %} active {% endif %}">
+                        <i class="nav-icon fa-solid fas far fas fa-users"></i>
+                        <p>
+                            Manage fee
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'payment' as payment%}
+                    <a href="{{payment}}" class="nav-link  {% if payment == request.path %} active {% endif %}">
+                        <i class="nav-icon fa-solid fas fa-money-bill-alt"></i>
+                        <p>
+                            payment
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'manage_payment' as manage_payment %}
+                    {% url 'edit_payment' pay_id  as edit_payment %}
+
+                    <a href="{{manage_payment}}"
+                        class="nav-link  {% if edit_payment == request.path or manage_fee == request.path %} active {% endif %}">
+                        <i class="nav-icon fa-solid fas far fas fa-users"></i>
+                        <p>
+                            Manage payment
+
+                        </p>
+                    </a>
+                </li>
+
+                
                 <li class="nav-header">Manage Staff</li>
                 <li class="nav-item">
                     {% url 'admin_notify_staff' as admin_notify_staff %}
@@ -123,7 +174,7 @@
                     </a>
                 </li>
 
-                <li class="nav-header">Manage Staff</li>
+                <li class="nav-header">Manage courses</li>
                 <li class="nav-item">
                     {% url 'add_course' as add_course %}
                     <a href="{{add_course}}" class="nav-link  {% if add_course == request.path %} active {% endif %}">
@@ -149,7 +200,7 @@
                 <li class="nav-item">
                     {% url 'add_subject' as add_subject %}
                     <a href="{{add_subject}}" class="nav-link  {% if add_subject == request.path %} active {% endif %}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-book-open"></i>
                         <p>
                             Add Subject
 
@@ -295,6 +346,17 @@
                         <p>
                             View/Edit Profile
 
+                        </p>
+                    </a>
+                </li>
+
+
+                <li class="nav-item">
+                    {% url 'staff_online_class' as staff_online_class %}
+                    <a href="{{staff_online_class}}" class="nav-link {% if staff_online_class == request.path %} active {% endif %}  " target="_blank">
+                        <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                        <p>
+                          online class
                         </p>
                     </a>
                 </li>
@@ -464,12 +526,14 @@
         
                     {% url 'student_view_ide' as student_view_ide %}
                     <a href="{{student_view_ide}}" class="nav-link {% if student_view_ide == request.path %} active {% endif %}">
-                        <i class="nav-icon fa-solid fas fa-terminal"></i>
+                        <i class="nav-icon fa-solid fas fa-code"></i>
                         <p>
                            IDE
                         </p>
                     </a>
                 </li>
+
+                
           
 {% endif %}
 

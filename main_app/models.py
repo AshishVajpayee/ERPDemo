@@ -73,15 +73,49 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+class payment(models.Model):
+    student = models.ForeignKey(CustomUser , on_delete=models.DO_NOTHING, null=True)
+    paymentMethod = models.CharField(max_length=20)
+    paid = models.IntegerField(max_length=20)
+    payable = models.IntegerField(max_length=20)
+    balanceamount = models.IntegerField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def balance(self):
+        payable = self.student.fee.amount
+        paidamount = self.totalpaid()
+        return payable - paidamount
+    
+    def totalpaid(self):
+        totalpaidamount = 0
+        totalpaidamount = self.paid + totalpaidamount
+        return totalpaidamount
+    
 
+class fee(models.Model):
+    addmissiontype = models.CharField(max_length=120)
+    amount = models.IntegerField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.addmissiontype +" "+ str(self.amount)
+    
+    
+    
+    
 class Student(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False)
     session = models.ForeignKey(Session, on_delete=models.DO_NOTHING, null=True)
-
+    fee = models.ForeignKey(fee , on_delete=models.DO_NOTHING, null=True)
+    
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
-
+    
+    def totalamount(self):
+        return self.fee.amount
 
 class Staff(models.Model):
     course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False)

@@ -1,0 +1,128 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="paymenttable" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>SN</th>
+                                    <th>student name</th>
+                                    <th>payment method</th>
+                                    <th>paid amount</th>
+                                    <th>balance amount</th>
+                                    <th> pay balance</th>
+                                    <th> send alert </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pay in payments %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{pay.student.first_name }} {{pay.student.last_name }}</td>
+                                    <td>{{pay.paymentMethod}}</td>
+                                    <td>{{pay.paid}}
+                                    <td>{{pay.balanceamount}}
+                                        <td><a href="{% url 'edit_payment' pay.id %}" class="btn btn-primary">pay</a>  </td>
+                                        <td><button data-toggle = "modal" data-target = "#myModal"class="btn btn-primary show_notification" value="{{pay.student.id}}">Send Notification</button> 
+                                        </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class = "modal fade" id = "myModal" tabindex = "-1" role = "dialog" 
+   aria-labelledby = "myModalLabel" aria-hidden = "true">
+   
+   <div class = "modal-dialog">
+      <div class = "modal-content">
+         
+         <div class = "modal-header">Send Notification
+            <button type = "button" class = "close" data-dismiss = "modal" aria-hidden = "true">
+                  &times;
+            </button>
+            
+           
+         </div>
+         
+         <div class = "modal-body">
+            <div class="form-group">
+                <input type="text" id="message" class='form-control' value = "please pay balance amount {{pay.balanceamount}}">
+                <input type="hidden"  id="student_id" class='form-control'>
+            </div>
+         </div>
+         
+         <div class = "modal-footer">
+            <button type = "button" class = "btn btn-default" data-dismiss = "modal">
+               Close
+            </button>
+            
+            <button type = "button" id='send' class = "btn btn-success send_notification">
+               Send Notification
+            </button>
+         </div>
+         
+      </div><!-- /.modal-content -->
+   </div><!-- /.modal-dialog -->
+  
+</div><!-- /.modal -->
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $(".show_notification").click(function(){
+        $("#student_id").val($(this).val())
+    })
+    $(".send_notification").click(function(){
+        var id = $("#student_id").val()
+        var message = $("#message").val()
+        sendNotification(id,message);
+    })
+  function sendNotification(id,message){
+      $.ajax({
+          url: "{% url 'send_student_notification' %}",
+          type: 'POST',
+          data: {
+              id: id,
+              message:message
+          }
+      }).done(function (response) {
+         
+              
+          if (response == 'True'){
+              alert("Notification Sent");
+              location.reload();
+            }else{
+              alert("Notification could not be saved. Please try again.");
+            }
+             
+         
+      }).fail(function (response) {
+          alert("Error in saving token")
+      })
+
+  }
+
+</script>
+<script>
+    $(document).ready( function () {
+        $('#paymenttable').DataTable();
+    } );
+  </script>
+    {% endblock custom_js %}

@@ -14,7 +14,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table id="coursetable" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>SN</th>
@@ -42,3 +42,10 @@
     </div>
 </section>
 {% endblock content %}
+{% block custom_js %}
+<script>
+    $(document).ready( function () {
+        $('#coursetable').DataTable();
+    } );
+  </script>
+    {% endblock custom_js %}
